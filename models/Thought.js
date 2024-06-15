@@ -1,5 +1,4 @@
 const { Schema, model } = require('mongoose');
-const userSchema = require('./User');
 const reactionSchema = require('./Reaction');
 
 const dayjs = require('dayjs');
@@ -14,7 +13,7 @@ const thoughtSchema = new Schema({
 	},
 	createdAt: {
 		type: Date,
-		default: () => Date.now(),
+		default: () => dayjs(),
 	},
 	username: {
 		type: String,
@@ -25,7 +24,7 @@ const thoughtSchema = new Schema({
 
 // getter for formatted createdAt timestamp
 thoughtSchema.methods.getCreatedAt = function () {
-	return dayjs(this.createdAt).format('DD/MM/YYYY');
+	return this.createdAt.format('DD/MM/YYYY');
 };
 
 // virtual to retrieve the length of reactions array
@@ -33,6 +32,6 @@ thoughtSchema.virtual('reactionCount').get(function () {
 	return this.reactions.length;
 });
 
-const Thought = model('thought', thoughtSchema);
+const Thought = model('Thought', thoughtSchema);
 
 module.exports = Thought;
