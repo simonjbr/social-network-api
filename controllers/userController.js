@@ -12,6 +12,22 @@ const getUsers = async (req, res) => {
 	}
 };
 
+const getUserById = async (req, res) => {
+	try {
+		const userId = req.params.userId;
+		const user = await User.findById(userId);
+
+		if (!user) {
+			res.status(404).json({ message: `No user with _id: ${userId}` });
+		}
+
+		res.status(200).json(user);
+	} catch (error) {
+		console.log(`Error at POST /api/users/:userId`, error);
+		res.status(500).json(error);
+	}
+};
+
 // POST new user /api/users
 const createUser = async (req, res) => {
 	try {
@@ -30,5 +46,6 @@ const createUser = async (req, res) => {
 
 module.exports = {
 	getUsers,
+	getUserById,
 	createUser,
 };
