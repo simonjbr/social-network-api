@@ -12,6 +12,7 @@ const getUsers = async (req, res) => {
 	}
 };
 
+// GET a user by id /api/users/:userId
 const getUserById = async (req, res) => {
 	try {
 		const userId = req.params.userId;
@@ -44,8 +45,36 @@ const createUser = async (req, res) => {
 	}
 };
 
+// PUT update user /api/users/:userId
+const updateUser = async (req, res) => {
+	try {
+		const userId = req.params.userId;
+
+		const user = await User.findByIdAndUpdate(
+			userId,
+			{
+				username: req.body.username,
+				email: req.body.email,
+			},
+			{
+				new: true,
+			}
+		);
+
+		if (!user) {
+			res.status(404).json({ message: `No user with _id: ${userId}` });
+		}
+
+		res.status(200).json(user);
+	} catch (error) {
+		console.log(`Error at PUT /api/users/:userId`, error);
+		res.status(500).json(error);
+	}
+};
+
 module.exports = {
 	getUsers,
 	getUserById,
 	createUser,
+	updateUser,
 };
