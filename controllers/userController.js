@@ -53,8 +53,10 @@ const updateUser = async (req, res) => {
 		const user = await User.findByIdAndUpdate(
 			userId,
 			{
-				username: req.body.username,
-				email: req.body.email,
+				$set: {
+					username: req.body.username,
+					email: req.body.email,
+				},
 			},
 			{
 				new: true,
@@ -100,10 +102,44 @@ const deleteUser = async (req, res) => {
 	}
 };
 
+// POST add new friend /api/users/:userId/friends/:friendId
+const addFriend = async (req, res) => {
+	try {
+		const userId = req.params.userId;
+		const friendId = req.params.friendId;
+
+		const user = await User.findByIdAndUpdate(
+			userId,
+			{
+				$addToSet: {
+					friends: friendId,
+				},
+			},
+			{
+				runValidators: true,
+				new: true,
+			}
+		).populate('friends');
+
+		if (!user) {
+			res.status(404).json({ message: `No user with _id: ${userId}` });
+		}
+
+		res.status(200).json(user);
+	} catch (error) {
+		console.log(
+			`Error at POST /api/users/:userId/friends/:friendId`,
+			error
+		);
+		res.status(500).json(error);
+	}
+};
+
 module.exports = {
 	getUsers,
 	getUserById,
 	createUser,
 	updateUser,
 	deleteUser,
+	addFriend,
 };
