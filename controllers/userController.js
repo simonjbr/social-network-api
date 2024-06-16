@@ -20,6 +20,7 @@ const getUserById = async (req, res) => {
 
 		if (!user) {
 			res.status(404).json({ message: `No user with _id: ${userId}` });
+			return;
 		}
 
 		res.status(200).json(user);
@@ -65,6 +66,7 @@ const updateUser = async (req, res) => {
 
 		if (!user) {
 			res.status(404).json({ message: `No user with _id: ${userId}` });
+			return;
 		}
 
 		res.status(200).json(user);
@@ -84,6 +86,7 @@ const deleteUser = async (req, res) => {
 
 		if (!user) {
 			res.status(404).json({ message: `No user with _id: ${userId}` });
+			return;
 		}
 
 		// delete associated thoughts
@@ -112,6 +115,7 @@ const addFriend = async (req, res) => {
 
 		if (!friend) {
 			res.status(404).json({ message: `No user with _id: ${friendId}` });
+			return;
 		}
 
 		const user = await User.findByIdAndUpdate(
@@ -129,12 +133,54 @@ const addFriend = async (req, res) => {
 
 		if (!user) {
 			res.status(404).json({ message: `No user with _id: ${userId}` });
+			return;
 		}
 
 		res.status(200).json(user);
 	} catch (error) {
 		console.log(
 			`Error at POST /api/users/:userId/friends/:friendId`,
+			error
+		);
+		res.status(500).json(error);
+	}
+};
+
+// DELETE friend /api/users/:userId/friends/:friendId
+const deleteFriend = async (req, res) => {
+	try {
+		const userId = req.params.userId;
+		const friendId = req.params.friendId;
+
+		const friend = await User.findById(friendId);
+
+		if (!friend) {
+			res.status(404).json({ message: `No user with _id: ${friendId}` });
+			return;
+		}
+
+		const user = await User.findByIdAndUpdate(
+			userId,
+			{
+				$pull: {
+					friends: friendId,
+				},
+			},
+			{
+				runValidators: true,
+				new: true,
+			}
+		).populate('friends');
+
+		if (!user) {
+			res.status(404).json({ message: `No user with _id: ${userId}` });
+			return;
+		}
+
+		res.status(200).json(user);
+	} catch (error) {
+		console.log(
+			`Error at DELETE /api/users/:userId/friends/:friendId`,
 			error
 		);
 		res.status(500).json(error);
@@ -148,4 +194,5 @@ module.exports = {
 	updateUser,
 	deleteUser,
 	addFriend,
+	deleteFriend,
 };
