@@ -108,6 +108,12 @@ const addFriend = async (req, res) => {
 		const userId = req.params.userId;
 		const friendId = req.params.friendId;
 
+		const friend = await User.findById(friendId);
+
+		if (!friend) {
+			res.status(404).json({ message: `No user with _id: ${friendId}` });
+		}
+
 		const user = await User.findByIdAndUpdate(
 			userId,
 			{
