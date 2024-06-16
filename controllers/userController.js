@@ -72,9 +72,38 @@ const updateUser = async (req, res) => {
 	}
 };
 
+// DELETE user /api/users/:userId
+const deleteUser = async (req, res) => {
+	try {
+		const userId = req.params.userId;
+
+		// delete user by id
+		const user = await User.findByIdAndDelete(userId);
+
+		if (!user) {
+			res.status(404).json({ message: `No user with _id: ${userId}` });
+		}
+
+		// delete associated thoughts
+		await Thought.deleteMany({
+			_id: {
+				$in: user.thoughts,
+			},
+		});
+
+		res.status(200).json({
+			message: `User with id: ${userId} and associated thoughts successfully deleted`,
+		});
+	} catch (error) {
+		console.log(`Error at DELETE /api/users/:userId`, error);
+		res.status(500).json(error);
+	}
+};
+
 module.exports = {
 	getUsers,
 	getUserById,
 	createUser,
 	updateUser,
+	deleteUser,
 };
