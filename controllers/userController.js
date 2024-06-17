@@ -16,7 +16,10 @@ const getUsers = async (req, res) => {
 const getUserById = async (req, res) => {
 	try {
 		const userId = req.params.userId;
-		const user = await User.findById(userId);
+		const user = await User.findById(userId).populate([
+			'thoughts',
+			'friends',
+		]);
 
 		if (!user) {
 			res.status(404).json({ message: `No user with _id: ${userId}` });
