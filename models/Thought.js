@@ -5,28 +5,33 @@ const reactionSchema = require('./Reaction');
 const dayjs = require('dayjs');
 
 // schema to create Thought model
-const thoughtSchema = new Schema({
-	thoughtText: {
-		type: String,
-		required: true,
-		minLength: 1,
-		maxLength: 280,
+const thoughtSchema = new Schema(
+	{
+		thoughtText: {
+			type: String,
+			required: true,
+			minLength: 1,
+			maxLength: 280,
+		},
+		createdAt: {
+			type: Date,
+			default: () => dayjs(),
+			get: (timestamp) =>
+				dayjs(timestamp).format('MMM D, YYYY [at] HH:mm a'),
+		},
+		username: {
+			type: String,
+			required: true,
+		},
+		reactions: [reactionSchema],
 	},
-	createdAt: {
-		type: Date,
-		default: () => dayjs(),
-	},
-	username: {
-		type: String,
-		required: true,
-	},
-	reactions: [reactionSchema],
-});
-
-// getter for formatted createdAt timestamp
-thoughtSchema.methods.getCreatedAt = function () {
-	return this.createdAt.format('DD/MM/YYYY');
-};
+	{
+		toJSON: {
+			getters: true,
+			virtuals: true,
+		},
+	}
+);
 
 // virtual to retrieve the length of reactions array
 thoughtSchema.virtual('reactionCount').get(function () {
