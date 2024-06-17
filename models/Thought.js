@@ -30,6 +30,8 @@ const thoughtSchema = new Schema(
 			getters: true,
 			virtuals: true,
 		},
+		// stop default id getter from duplicating _id field
+		id: false,
 	}
 );
 
