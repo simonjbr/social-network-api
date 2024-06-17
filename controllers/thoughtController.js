@@ -134,10 +134,46 @@ const deleteThought = async (req, res) => {
 	}
 };
 
+// POST new reaction /api/thoughts/:thoughtId/reactions
+const createReaction = async (req, res) => {
+	try {
+		const thoughtId = req.params.thoughtId;
+
+		const updateThought = await Thought.findByIdAndUpdate(
+			thoughtId,
+			{
+				$addToSet: {
+					reactions: {
+						reactionBody: req.body.reactionBody,
+						username: req.body.username,
+					},
+				},
+			},
+			{
+				runValidators: true,
+				new: true,
+			}
+		);
+
+		if (!updateThought) {
+			res.status(404).json({
+				message: `Could not find thought with id: ${thoughtId}`,
+			});
+			return;
+		}
+
+		res.status(200).json(updateThought);
+	} catch (error) {
+		console.log(`Error at POST /api/thoughts/:thoughtId/reactions`, error);
+		res.status(500).json(error);
+	}
+};
+
 module.exports = {
 	getThoughts,
 	getThoughtById,
 	createThought,
 	updateThought,
 	deleteThought,
+	createReaction,
 };
