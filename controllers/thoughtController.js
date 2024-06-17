@@ -66,8 +66,39 @@ const createThought = async (req, res) => {
 	}
 };
 
+// PUT update thought /api/thoughts/:thoughtId
+const updateThought = async (req, res) => {
+	try {
+		const thoughtId = req.params.thoughtId;
+
+		const updateThought = await Thought.findByIdAndUpdate(
+			thoughtId,
+			{
+				$set: {
+					thoughtText: req.body.thoughtText,
+				},
+			},
+			{
+				new: true,
+			}
+		);
+
+		if (!updateThought) {
+			res.status(404).json({
+				message: `Could not find thought with id: ${thoughtId}`,
+			});
+		}
+
+		res.status(200).json(updateThought);
+	} catch (error) {
+		console.log(`Error at PUT /api/thoughts/:thoughtId`, error);
+		res.status(500).json(error);
+	}
+};
+
 module.exports = {
 	getThoughts,
 	getThoughtById,
 	createThought,
+	updateThought,
 };
