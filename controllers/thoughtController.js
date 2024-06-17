@@ -3,7 +3,7 @@ const { User, Thought } = require('../models');
 // GET all thoughts /api/thoughts
 const getThoughts = async (req, res) => {
 	try {
-		const thoughts = await Thought.find();
+		const thoughts = await Thought.find().populate('reactions');
 		if (!thoughts) {
 			res.status(404).json({
 				message: `Could not find any thoughts.`,
@@ -23,7 +23,7 @@ const getThoughtById = async (req, res) => {
 	try {
 		const thoughtId = req.params.thoughtId;
 
-		const thought = await Thought.findById(thoughtId);
+		const thought = await Thought.findById(thoughtId).populate('reactions');
 		if (!thought) {
 			res.status(404).json({
 				message: `Could not find thought with id: ${thoughtId}`,
@@ -59,7 +59,7 @@ const createThought = async (req, res) => {
 			}
 		);
 
-		res.status(200).json({newThought, updateUser});
+		res.status(200).json(newThought);
 	} catch (error) {
 		console.log(`Error at POST /api/thoughts`, error);
 		res.status(500).json(error);
