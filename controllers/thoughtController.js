@@ -169,6 +169,44 @@ const createReaction = async (req, res) => {
 	}
 };
 
+// DELETE reaction /api/thought/:thoughtId/reactions/:reactionId
+const deleteReaction = async (req, res) => {
+	try {
+		const thoughtId = req.params.thoughtId;
+		const reactionId = req.params.reactionId;
+
+		const updateThought = await Thought.findByIdAndUpdate(
+			thoughtId,
+			{
+				$pull: {
+					reactions: {
+						_id: reactionId,
+					},
+				},
+			},
+			{
+				runValidators: true,
+				new: true,
+			}
+		);
+
+		if (!updateThought) {
+			res.status(404).json({
+				message: `Could not find thought with id: ${thoughtId}`,
+			});
+			return;
+		}
+
+		res.status(200).json(updateThought);
+	} catch (error) {
+		console.log(
+			`Error at DELETE /api/thoughts/:thoughtId/reactions/:reactionId`,
+			error
+		);
+		res.status(500).json(error);
+	}
+};
+
 module.exports = {
 	getThoughts,
 	getThoughtById,
@@ -176,4 +214,5 @@ module.exports = {
 	updateThought,
 	deleteThought,
 	createReaction,
+	deleteReaction,
 };
