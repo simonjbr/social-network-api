@@ -87,6 +87,7 @@ const updateThought = async (req, res) => {
 			res.status(404).json({
 				message: `Could not find thought with id: ${thoughtId}`,
 			});
+			return;
 		}
 
 		res.status(200).json(updateThought);
@@ -96,9 +97,47 @@ const updateThought = async (req, res) => {
 	}
 };
 
+// DELETE thought by id /api/thoughts/:thoughtId
+const deleteThought = async (req, res) => {
+	try {
+		const thoughtId = req.params.thoughtId;
+
+		const deleteThought = await Thought.findByIdAndDelete(thoughtId);
+
+		if (!deleteThought) {
+			res.status(404).json({
+				message: `Could not find thought with id: ${thoughtId}`,
+			});
+			return;
+		}
+
+		// remove deleted thought from User's thoughts array
+		const updateUser = await User.findOneAndUpdate(
+			{
+				username: deleteThought.username,
+			},
+			{
+				$pull: {
+					thoughts: thoughtId,
+				},
+			},
+			{
+				runValidators: true,
+				new: true,
+			}
+		);
+
+		res.status(200).json(deleteThought);
+	} catch (error) {
+		console.log(`Error at DELETE /api/thoughts/:thoughtId`, error);
+		res.status(500).json(error);
+	}
+};
+
 module.exports = {
 	getThoughts,
 	getThoughtById,
 	createThought,
 	updateThought,
+	deleteThought,
 };
