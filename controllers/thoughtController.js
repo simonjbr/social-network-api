@@ -38,7 +38,36 @@ const getThoughtById = async (req, res) => {
 	}
 };
 
+// POST new thought /api/thoughts
+const createThought = async (req, res) => {
+	try {
+		const newThought = await Thought.create({
+			thoughtText: req.body.thoughtText,
+			username: req.body.username,
+		});
+
+		const updateUser = await User.findByIdAndUpdate(
+			req.body.userId,
+			{
+				$addToSet: {
+					thoughts: newThought._id,
+				},
+			},
+			{
+				runValidators: true,
+				new: true,
+			}
+		);
+
+		res.status(200).json({newThought, updateUser});
+	} catch (error) {
+		console.log(`Error at POST /api/thoughts`, error);
+		res.status(500).json(error);
+	}
+};
+
 module.exports = {
 	getThoughts,
 	getThoughtById,
+	createThought,
 };
