@@ -8,10 +8,10 @@ The social-network-api is a functioning social media back-end which provides a R
 
 ## Table of Contents
 
-- [Installation](#installation)
-- [Usage](#usage)
-- [Credits](#credits)
-- [License](#license)
+-   [Installation](#installation)
+-   [Usage](#usage)
+-   [Credits](#credits)
+-   [License](#license)
 
 ## Installation
 
@@ -26,31 +26,33 @@ To start the application server listening the user must run `npm start`.
 The user can then start interacting with the database using their favored API tool (Insomnia, Postman, etc...).
 
 The endpints available are:
-- `/api/users`
-	- GET all users
-	- POST new user
-- `/api/users/:userId`
-	- GET user by id
-	- PUT update user
-	- DELETE user
-- `/api/users/:userId/friends/:friendId`
-	- PUT add friend
-	- DELETE friend
 
-- `/api/thoughts`
-	- GET all thoughts
-	- POST new thought
-- `/api/thoughts/:thoughtId`
-	- GET thought by id
-	- PUT update thought
-	- DELETE thought
-- `/api/thoughts/:thoughtId/reactions`
-	- POST new reaction
-- `/api/thoughts/:thoughtId/reactions/:reactionId`
-	- DELETE reaction
+-   `/api/users`
+    -   GET all users
+    -   POST new user
+-   `/api/users/:userId`
+    -   GET user by id
+    -   PUT update user
+    -   DELETE user
+-   `/api/users/:userId/friends/:friendId`
+
+    -   PUT add friend
+    -   DELETE friend
+
+-   `/api/thoughts`
+    -   GET all thoughts
+    -   POST new thought
+-   `/api/thoughts/:thoughtId`
+    -   GET thought by id
+    -   PUT update thought
+    -   DELETE thought
+-   `/api/thoughts/:thoughtId/reactions`
+    -   POST new reaction
+-   `/api/thoughts/:thoughtId/reactions/:reactionId`
+    -   DELETE reaction
 
 Find the video walkthrough here:
-[Video Walkthrough](https://drive.google.com/XXXX)
+[Video Walkthrough](https://www.loom.com/share/0659eb3200c84f028e47cdbe2a0d930b?sid=ab576313-490b-4387-a44d-2a0c1ea3935d)
 
 ## Credits
 
