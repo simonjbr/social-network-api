@@ -52,7 +52,7 @@ The endpints available are:
     -   DELETE reaction
 
 Find the video walkthrough here:
-[Video Walkthrough](https://www.loom.com/share/0659eb3200c84f028e47cdbe2a0d930b?sid=ab576313-490b-4387-a44d-2a0c1ea3935d)
+[Video Walkthrough](https://www.loom.com/share/8805a2ebe3a74c0ea514456d705a0676?sid=d10fe810-ecec-4d4d-b792-88873434c433)
 
 ## Credits
 
